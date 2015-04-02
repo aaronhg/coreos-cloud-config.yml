@@ -1,0 +1,28 @@
+#cloud-config
+
+hostname: myhostname
+
+coreos:
+  etcd:
+    addr: $private_ipv4:4001
+    peer-addr: $private_ipv4:7001
+  units:
+    - name: etcd.service
+      command: start
+    - name: fleet.service
+      command: start
+    - name: static.network
+      content: |
+        [Match]
+        Name=en*
+
+        [Network]
+        DHCP=yes
+users:
+  - name: core
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEA4lVqHVXO08s33d37vajc2J2sUASF0n7mkSsFSLzjdCb4e4MXdNm5gYk0UEiRFvVuB8emwG4iRkZbTefCg8DKhUuzCaIO4T/3ipKFE+6MA/qTIilM5hbJEXQsgmUy+rGltdbfg6pUkw8wFpLQysK0+rD164ozjRNdCpM614aYiaO4+6OaJpwxZ8GFMxbdn70yLXFh/+k+82ecNl0+bsQrwyg5Ajb7q0FDtv1MjBVWmGq3Yu2kZVKvGkM78+PQBU4OL1WW3nj+bf5BWEb3kFInOqEqXNWkKAbe1FfEbvns+92VAggyGs1JeUbESWsw+ngfyc/6QwtInSjipbl1Bf0O4w== rsa-key-20150402
+
+  - groups:
+      - sudo
+      - docker
